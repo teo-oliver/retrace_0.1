@@ -1,0 +1,104 @@
+{% extends './base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+
+
+{% block content %}
+
+<div class="container mb-4">
+    <h1 class="display-3"><center>Shifts</center></h1>
+    <button type="button" class="btn btn-info btn-lg btn-block" data-toggle="modal" data-target="#filterModal" >Add New Shift</button>
+</div>
+ 
+<div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+<div class="container">
+    
+    {% load shifts %} {# custom tag #}
+        
+    <div class="container">  
+        {% for user in users %}
+        {% if user.shift_set.count > 0 %}
+            <div class="row">   {# this could be a nav that stick intil the next one? #}
+                <div class="col-md-2"> 
+                    {# <img class="rounder-circle" src="{{ user.profile.image.url}}" alt="">#}   
+                    <strong>{{user.username}}</strong> 
+                </div>
+                <div class="col-md-2"> <strong> In/Out </strong> </div>
+                <div class="col-md-2"> <strong> Break </strong>  </div>
+                <div class="col-md-3"> <strong> Hours </strong>  </div>
+                <div class="col-md-3"> </div>
+            </div>
+            <hr> 
+            {% for i in user.shift_set.all %}
+                <div class="row" id="shift-rows">
+                    <div class="col-md-2"> {{ i.date|date:"d/m/y" }} </div>
+                    <div class="col-md-2"> {{ i.clock_in|date:"H:i" }} - {{ i.clock_out|date:"H:i"}} </div>
+                    <div class="col-md-2"> {{ i.break_time}} </div>
+                    <div class="col-md-3"> {{i.duration}}h </div>
+                    <div class="col-md-1"> <a class="btn btn-outline-info btn-sm" href="{% url 'detail' pk=i.id %}">Detail</a> </div>
+                    <div class="col-md-1"> <a class="btn btn-outline-info btn-sm" href="{% url 'edit' pk=i.id %}">Edit</a> </div>
+                    <div class="col-md-1"> <a class="btn btn-outline-danger btn-sm" href="{% url 'remove' pk=i.id %}">Remove</a> </div>
+                </div>
+                <hr>    
+        
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-md-2"> </div>
+                <div class="col-md-2"> </div>
+                <div class="col-md-2"> </div>
+
+                <div class="col-md-3"> 
+                    <strong>Total: </strong>  {% calc_total_duration user.shift_set.all %}  
+                </div>
+
+                <div class="col-md-3"> </div>
+            </div>
+            <hr>
+        {% else %}
+        {% endif %}
+        {% endfor %} 
+    
+    </div>
+
+
+    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Filter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                <form action="{% url 'submit' %}" method="POST">
+                    {{ form|crispy  }}
+                    {% csrf_token %}
+                    <hr>
+                    <input type="submit" class="btn btn-primary" value="Submit">
+                    {#<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+                </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>      
+
+
+<script src="{% static 'hoursCalc/indexjs.js'%}"></script>
+
+{% endblock content %}

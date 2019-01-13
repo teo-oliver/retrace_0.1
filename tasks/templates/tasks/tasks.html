@@ -1,0 +1,43 @@
+{% extends 'shifts/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+
+<h1 class="display-2 text-center"> Todo List </h1>
+
+<div class="container text-center">
+  <form action="{% url 'add_task' %}" method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group">
+      <!-- <legend class="border-botton">Create Task</legend> -->
+      <hr>
+      {{ task_form|crispy }}
+    </fieldset>
+    <div class="form-group">
+      <button class="btn btn-outline-info" type="submit" >Create</button>
+      <a class="btn btn-outline-info" href="{% url 'remove_completed' %}"> Delete Completed </a>
+      <a class="btn btn-outline-info" href="{% url 'remove_all' %}"> Delete All </a>
+    </div>
+    <hr class="mb-2">
+  </form>
+</div>
+
+
+  <div class="mb-3">
+    {% for task in tasks %}
+        {% if task.done %}
+          <h2 class="ml-2 bg-info text-center" ><strike>{{ task.text }}</strike></h2></li>
+        {% else %}
+          <a href="{% url 'task_completed' pk=task.id %}"><h2 class="display-5 ml-2 text-center ">{{ task.text }}</h2></a>
+        {% endif %}
+    <hr>
+    {% endfor %}
+  </div>
+
+</div>
+</div>
+
+{% endblock content %}

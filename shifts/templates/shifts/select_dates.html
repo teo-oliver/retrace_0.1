@@ -1,0 +1,64 @@
+{% extends './base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="container">
+    <h1 class="display-3"><center>Filter Dates</center></h1>
+</div>
+
+    <div class="container">
+        <div class="jumbotron">
+
+            <form action="{% url 'select' %}" method="POST">
+                {% csrf_token %}
+                <center>
+                {{ select_date_form }}               
+                <input type="submit" class="btn btn-outline-danger btn-sm" value="Select">
+            </center>
+            </form>
+
+        </div>
+        
+    </div>
+
+    <div class="container">  
+    {% regroup shifts by name as user_list %}
+    {% load shifts %} {# custom tag #}
+        
+    <hr>
+        {% for user in user_list %}
+        
+            <div class="row">
+                <div class="col-md-2"> <strong>{{ user.grouper.username }}</strong> </div>
+                <div class="col-md-2"> <strong> In/Out </strong> </div>
+                <div class="col-md-2"> <strong> Break </strong>  </div>
+                <div class="col-md-3"> <strong> Hours </strong>  </div>
+                <div class="col-md-3"> </div>
+            </div>
+            <hr>
+            {% for shift in user.list %}
+                <div class="row">
+                    <div class="col-md-2"> {{ shift.date|date:"d/m/y" }} </div>
+                    <div class="col-md-2"> {{ shift.clock_in|date:"H:i" }} - {{ shift.clock_out|date:"H:i" }} </div>
+                    <div class="col-md-2"> {{ shift.break_time }} </div>
+                    <div class="col-md-3"> {{ shift.duration }}h </div>
+                </div>
+                <hr>
+            {% endfor %}
+            
+            <div class="row">
+                <div class="col-md-2"> </div>
+                <div class="col-md-2"> </div>
+                <div class="col-md-2"> </div>
+                <div class="col-md-3"> <strong>Total:</strong> {% calc_total_duration user.list %} </div>
+                <div class="col-md-3"> </div>
+                
+            </div>
+            <hr>
+            
+        {% endfor %} 
+    </div>
+</div>
+
+{% endblock content %}

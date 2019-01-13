@@ -1,0 +1,17 @@
+{% extends 'shifts/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <form action="" method="POST">
+      {% csrf_token %}
+      <fieldset class="form-group">
+        <legend class="border-botton">Create/Update Post</legend>
+        <hr>
+        {{ form|crispy }}
+      </fieldset>
+      <hr>
+      <div class="form-group">
+        <button class="btn btn-outline-info" type="submit" >Post</button>
+      </div>
+    </form>
+{% endblock content %}
