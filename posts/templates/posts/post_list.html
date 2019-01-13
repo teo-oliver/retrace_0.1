@@ -8,12 +8,14 @@
     <div class="col-lg-6 mx-auto text-center">
 
       {% for post in posts %}
-         <div class="border mb-3"> <!-- make it as a card latter -->
-          <h3 class="bg-info "><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h3>
-          <h6 class="ml-2">By {{ post.author  }} on {{ post.date_posted|date:"F d, Y" }}</p>
-          <hr class="ml-2 mr-2">
-          <p class="ml-2">{{ post.content }}</p>
-        </div>
+        <article class="border mb-3">
+            <div class="">
+              <small class="ml-2 text-muted">By {{ post.author  }} on {{ post.date_posted|date:"F d, Y" }}</small><br>
+              <a class="mr-2 display-4" href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
+            </div>
+              <hr class="ml-2 mr-2">
+              <p class="ml-2">{{ post.content }}</p>
+        </article>
       {% endfor %}
 
       {% if is_paginated %}
