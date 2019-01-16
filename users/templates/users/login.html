@@ -4,8 +4,6 @@
 
 {% block content %}
 
-</head>
-<body>
   <div class="container">
       {% if messages %}
           {% for message in messages %}
@@ -25,6 +23,9 @@
       </fieldset>
       <div class="form-group">
         <button class="btn btn-outline-info" type="submit" >Login</button>
+        <small class="text-muted ml2">
+          <a href="{% url 'password_reset' %}">Forgot password?</a>
+        </small>
       </div>
     </form>
     <div>
